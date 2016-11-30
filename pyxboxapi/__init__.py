@@ -1,5 +1,6 @@
 import requests
 import datetime
+import json
 
 
 class XboxApi(object):
@@ -28,6 +29,21 @@ class XboxApi(object):
         # Make request and build response
         response = requests.get("{}{}".format(self.base_url, url), headers=headers)
         return XboxApiResponse(self, url, response)
+
+    def post(self, url, data):
+        """
+        Make POST request to the Xbox API for sending messages
+        :param url: Endpoint and parameters to append to self.base_url
+        :param data: Message payload to send
+        :return: Success boolean
+        """
+        headers = {
+            "X-AUTH": self.api_key,
+            "Content-Type": "application/json"
+        }
+        response = requests.post("{}{}".format(self.base_url, url), headers=headers, data=json.dumps(data))
+
+        return response.status_code == 200
 
     def get_profile(self):
         """This is your profile information"""
@@ -181,11 +197,34 @@ class XboxApi(object):
         """Show your achievements list by game with friends who also play. (New TitleHub endpoint)"""
         return self.get("/{}/titlehub-achievement-list".format(xuid))
 
-    def send_message(self):
-        pass
+    def send_message(self, message, xuid=None, xuids=None):
+        """Send a message from your account to other users"""
+        payload = {
+            "message": message,
+            "to": []
+        }
 
-    def send_activity_feed(self):
-        pass
+        if not xuid and not xuids:
+            raise ValueError("You must provide an xuid or list of xuids to send a message to.")
+
+        if not xuids:
+            xuids = []
+
+        if xuid:
+            xuids.append(xuid)
+
+        for xuid in xuids:
+            payload["to"].append(xuid)
+
+        return self.post("/messages", payload)
+
+    def send_activity_feed(self, message):
+        """Send a post to your activity feed"""
+        payload = {
+            "message": message
+        }
+
+        return self.post("activity-feed", payload)
 
 
 class XboxApiResponse(object):

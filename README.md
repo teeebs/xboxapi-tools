@@ -1,18 +1,12 @@
-# pyxboxapi
-Another python wrapper for the unofficial [Xbox API](https://xboxapi.com).
+# xboxapi-tools
+Tools for interacting with the unofficial [Xbox API](https://xboxapi.com).
 
-Originally forked from [Python-Wrapper](https://github.com/xboxapi/Python-Wrapper), but changes have been made that break backwards compatibility.
-
-## Dependencies
-
-* [requests](https://github.com/kennethreitz/requests)
-
-## Usage
+## API
 
 Instantiate an API object:
 
 ```python
-from pyxboxapi import XboxApi
+from xboxapitools.api import XboxApi
 api = XboxApi(api_key="{api_key}", language="{language}")
 ```
 

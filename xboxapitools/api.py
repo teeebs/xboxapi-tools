@@ -2,8 +2,6 @@ import requests
 import datetime
 import json
 
-__version__ = 0.1
-
 
 class XboxApi(object):
     def __init__(self, api_key=None, language=None, base_url=""):
